@@ -4,3 +4,5 @@
 node_modules/
 platforms/
 plugins/
+angular-ui-router
+skycons
