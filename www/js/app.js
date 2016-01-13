@@ -37,6 +37,7 @@ angular.module('starter', ['ionic', 'angular-skycons'])
       weather.temp = parseInt(res.data.currently.temperature);
       weather.summary = res.data.currently.summary;
       weather.icon = res.data.currently.icon;
+      weather.fiveDay = res.data.daily.data;
     })
   });
 
