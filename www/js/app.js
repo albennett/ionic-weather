@@ -25,29 +25,37 @@ angular.module('starter', ['ionic', 'angular-skycons'])
 
 .controller('weatherCtrl', function($http){
   var weather = this;
+  var apikey = '013ff5bfe2a4cdb4';
+  var url = 'http://api.wunderground.com/api/013ff5bfe2a4cdb4/conditions/forecast/geolookup/q/autoip.json';
+  weather.searchQuery;
+
   navigator.geolocation.getCurrentPosition(function (geopos){ 
     var lat = geopos.coords.latitude;
     var long = geopos.coords.longitude;
-    var apikey = '013ff5bfe2a4cdb4';
-
-    var url = 'http://api.wunderground.com/api/013ff5bfe2a4cdb4/conditions/forecast/geolookup/q/autoip.json';
     // var url = '/api/forecast/' + apikey + '/' + lat + ',' + long;
-
     // $http.get(url + lat + ',' + long + '.json').then (function(parseWUData){
     //   var 
     // })
-
-    $http.get(url).then(function (res){
-      console.log("res", res);
-      weather.temp = res.data.current_observation.temp_f;
-      weather.summary = res.data.current_observation.icon;
-      weather.iconURL = res.data.current_observation.icon_url; 
-      weather.fiveDay = res.data.forecast.simpleforecast.forecastday;
-      weather.city = res.data.location.city;
-    })
   });
+  function parseWUData(res){
+    console.log("res", res);
+    weather.temp = res.data.current_observation.temp_f;
+    weather.summary = res.data.current_observation.icon;
+    weather.iconURL = res.data.current_observation.icon_url; 
+    // weather.fiveDay = res.data.response.results
+    weather.fiveDay = res.data.forecast.simpleforecast.forecastday;
+    weather.city = res.data.location.city;
+  }
+
+  $http.get(url).then(parseWUData);
 
   weather.temp = "--";
+
+  weather.search = function (){
+    $http.get('http://api.wunderground.com/api/013ff5bfe2a4cdb4/conditions/forecast/geolookup/q/' + weather.searchQuery + '.json').then(parseWUData);
+  };
+
+
 });
 
 // .config(function ($stateProvider, $urlRouterProvider){
