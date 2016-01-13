@@ -57,13 +57,14 @@ angular.module('starter', ['ionic', 'angular-skycons'])
     $http.get('http://api.wunderground.com/api/013ff5bfe2a4cdb4/conditions/forecast/geolookup/q/' + weather.searchQuery + '.json')
     .then(parseWUData)
     .then(function(res){
-      console.log("res3", res.data.current_observation.station_id);
 
-      var history = JSON.parse(localStorage.getItem('searchHistory')) || [];
-        if (history.indexOf(res.data.current_observation.station_id) === -1){
-          history.push(res.data.current_observation.station_id);
+      var history = JSON.parse(localStorage.getItem('searchHistory')) || {};
+        // if (history.indexOf(res.data.current_observation.station_id) === -1){
+          var keyname = res.data.current_observation.display_location.city + ', ' + res.data.current_observation.display_location.state;
+          console.log("keyname", keyname);
+          history[keyname] = res.data.current_observation.station_id;
           localStorage.setItem('searchHistory', JSON.stringify(history));
-        }
+        // }
 
     });
   };
