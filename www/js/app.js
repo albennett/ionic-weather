@@ -45,6 +45,8 @@ angular.module('starter', ['ionic', 'angular-skycons'])
     // weather.fiveDay = res.data.response.results
     weather.fiveDay = res.data.forecast.simpleforecast.forecastday;
     weather.city = res.data.location.city;
+
+    return res;
   }
 
   $http.get(url).then(parseWUData);
@@ -52,7 +54,18 @@ angular.module('starter', ['ionic', 'angular-skycons'])
   weather.temp = "--";
 
   weather.search = function (){
-    $http.get('http://api.wunderground.com/api/013ff5bfe2a4cdb4/conditions/forecast/geolookup/q/' + weather.searchQuery + '.json').then(parseWUData);
+    $http.get('http://api.wunderground.com/api/013ff5bfe2a4cdb4/conditions/forecast/geolookup/q/' + weather.searchQuery + '.json')
+    .then(parseWUData)
+    .then(function(res){
+      console.log("res3", res.data.current_observation.station_id);
+
+      var history = JSON.parse(localStorage.getItem('searchHistory')) || [];
+        if (history.indexOf(res.data.current_observation.station_id) === -1){
+          history.push(res.data.current_observation.station_id);
+          localStorage.setItem('searchHistory', JSON.stringify(history));
+        }
+
+    });
   };
 
 
