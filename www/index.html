@@ -40,7 +40,7 @@
         <h1 class="temp-style">{{weather.temp}}°F</h1>
         <h3>{{weather.summary}}</h3>
         <div class="item item-divider bar-energized weekly">
-          Five-Day Forecast
+          Forecast
         </div>
         <div id="five-day-forcast" class="row">
           <div class="col card" ng-repeat="day in weather.fiveDay | limitTo: 5"> 
@@ -51,6 +51,11 @@
             <p>Low<br> {{day.low.fahrenheit}}</p>
           </div>
         </div> 
+        <h4 class="align-search">Search History</h4>
+        <div ng-repeat="(key, value) in weather.searches">
+          
+          <h5 class="align-search" ng-click="weather.clickSearch('{{value}}')">{{key}}</h5>
+        </div>
 
 
       </ion-content>

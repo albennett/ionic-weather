@@ -23,21 +23,35 @@ angular.module('starter', ['ionic', 'angular-skycons'])
   });
 })
 
-.controller('weatherCtrl', function($http){
+.controller('weatherCtrl', function($http, $ionicLoading){
   var weather = this;
   var apikey = '013ff5bfe2a4cdb4';
   var url = 'http://api.wunderground.com/api/013ff5bfe2a4cdb4/conditions/forecast/geolookup/q/autoip.json';
   weather.searchQuery;
 
+  weather.show = function() {
+    $ionicLoading.show({
+      template: '<p>Loading...</p><ion-spinner></ion-spinner>'
+    });
+  };
+
+  weather.hide = function(){
+        $ionicLoading.hide();
+  };
+
+  weather.show($ionicLoading);
+
   navigator.geolocation.getCurrentPosition(function (geopos){ 
     var lat = geopos.coords.latitude;
     var long = geopos.coords.longitude;
+    $http.get('http://api.wunderground.com/api/013ff5bfe2a4cdb4/conditions/forecast/geolookup/q/' + lat + ',' + long + '.json').then(parseWUdata);
     // var url = '/api/forecast/' + apikey + '/' + lat + ',' + long;
     // $http.get(url + lat + ',' + long + '.json').then (function(parseWUData){
     //   var 
     // })
   });
   function parseWUData(res){
+    weather.hide($ionicLoading); 
     console.log("res", res);
     weather.temp = res.data.current_observation.temp_f;
     weather.summary = res.data.current_observation.icon;
@@ -52,6 +66,8 @@ angular.module('starter', ['ionic', 'angular-skycons'])
   $http.get(url).then(parseWUData);
 
   weather.temp = "--";
+  var retrievedData = JSON.parse(localStorage.getItem('searchHistory')) || {};
+  weather.searches = retrievedData;
 
   weather.search = function (){
     $http.get('http://api.wunderground.com/api/013ff5bfe2a4cdb4/conditions/forecast/geolookup/q/' + weather.searchQuery + '.json')
@@ -59,15 +75,18 @@ angular.module('starter', ['ionic', 'angular-skycons'])
     .then(function(res){
 
       var history = JSON.parse(localStorage.getItem('searchHistory')) || {};
-        // if (history.indexOf(res.data.current_observation.station_id) === -1){
-          var keyname = res.data.current_observation.display_location.city + ', ' + res.data.current_observation.display_location.state;
-          console.log("keyname", keyname);
-          history[keyname] = res.data.current_observation.station_id;
-          localStorage.setItem('searchHistory', JSON.stringify(history));
-        // }
+        var keyname = res.data.current_observation.display_location.city + ', ' + res.data.current_observation.display_location.state;
+        history[keyname] = res.data.current_observation.station_id;
+        localStorage.setItem('searchHistory', JSON.stringify(history));
+        weather.searches = history;
 
     });
   };
+
+  weather.clickSearch = function(station_id) {
+    console.log(station_id);
+    $http.get('http://api.wunderground.com/api/fdcf53c91a30803b/conditions/forecast/geolookup/q/pws:' + station_id +'.json').then(parseWUData);
+  }
 
 
 });
