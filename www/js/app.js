@@ -23,6 +23,7 @@ angular.module('starter', ['ionic', 'angular-skycons'])
   });
 })
 
+
 .controller('weatherCtrl', function($http, $ionicLoading){
   var weather = this;
   var apikey = '013ff5bfe2a4cdb4';
@@ -41,22 +42,22 @@ angular.module('starter', ['ionic', 'angular-skycons'])
 
   weather.show($ionicLoading);
 
-  navigator.geolocation.getCurrentPosition(function (geopos){ 
+  navigator.geolocation.getCurrentPosition(function (geopos){
     var lat = geopos.coords.latitude;
     var long = geopos.coords.longitude;
     $http.get('http://api.wunderground.com/api/013ff5bfe2a4cdb4/conditions/forecast/geolookup/q/' + lat + ',' + long + '.json').then(parseWUdata);
     // var url = '/api/forecast/' + apikey + '/' + lat + ',' + long;
     // $http.get(url + lat + ',' + long + '.json').then (function(parseWUData){
-    //   var 
+    //   var
     // })
   });
+
   function parseWUData(res){
-    weather.hide($ionicLoading); 
+    weather.hide($ionicLoading);
     console.log("res", res);
     weather.temp = res.data.current_observation.temp_f;
     weather.summary = res.data.current_observation.icon;
-    weather.iconURL = res.data.current_observation.icon_url; 
-    // weather.fiveDay = res.data.response.results
+    weather.iconURL = res.data.current_observation.icon_url;
     weather.fiveDay = res.data.forecast.simpleforecast.forecastday;
     weather.city = res.data.location.city;
 

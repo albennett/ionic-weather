@@ -24,7 +24,7 @@
         <h1 class="title">Weather</h1>
       </ion-header-bar> -->
       <ion-content>
-      <div class="bar bar-header item-input-inset">
+      <form ng-submit="weather.search()" class="bar bar-header item-input-inset">
         <label class="item-input-wrapper">
           <i class="icon ion-ios-search placeholder-icon"></i>
           <input type="search" placeholder="Search" ng-model="weather.searchQuery">
@@ -32,10 +32,10 @@
         <button class="button button-royal" ng-click="weather.search()">
           Search
         </button>
-      </div>
+      </form>
         <!-- <skycon icon="weather.icon" class="icon-layout"></skycon> -->
         <h3>{{weather.city}}</h3>
-          <img class="main-image" src="{{weather.iconURL}}">               
+          <img class="main-image" src="{{weather.iconURL}}">
         <div ng-class="clear-night"></div>
         <h1 class="temp-style">{{weather.temp}}°F</h1>
         <h3>{{weather.summary}}</h3>
@@ -43,17 +43,17 @@
           Forecast
         </div>
         <div id="five-day-forcast" class="row">
-          <div class="col card" ng-repeat="day in weather.fiveDay | limitTo: 5"> 
+          <div class="col card" ng-repeat="day in weather.fiveDay | limitTo: 5">
             <!-- <skycon icon="day.icon" size="50"></skycon> -->
             <p> {{day.date.weekday_short}}
-            <img src="{{day.icon_url}}">  
+            <img src="{{day.icon_url}}">
             <p>High<br> {{day.high.fahrenheit}}</p>
             <p>Low<br> {{day.low.fahrenheit}}</p>
           </div>
-        </div> 
+        </div>
         <h4 class="align-search">Search History</h4>
         <div ng-repeat="(key, value) in weather.searches">
-          
+
           <h5 class="align-search" ng-click="weather.clickSearch('{{value}}')">{{key}}</h5>
         </div>
 
